@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewRoute(e *echo.Echo, db *gorm.DB) {
+func CinemaRoute(e *echo.Echo, db *gorm.DB) {
 	cinemaRepository := repository.NewCinemaRepository(db)
 
 	cinemaService := usecase.NewCinemaUsecase(cinemaRepository)

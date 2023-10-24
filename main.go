@@ -12,7 +12,8 @@ func main() {
 
 	e := echo.New()
 
-	route.NewRoute(e, db)
+	route.CinemaRoute(e, db)
+	route.MovieRoute(e, db)
 	
 	e.Logger.Fatal(e.Start(":8000"))
 }
