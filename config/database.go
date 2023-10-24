@@ -50,5 +50,6 @@ func InitDB() *gorm.DB{
 
 func InitialMigration() {
 	DB.AutoMigrate(&model.Cinema{})
+	DB.AutoMigrate(&model.Movie{})
 }
 
