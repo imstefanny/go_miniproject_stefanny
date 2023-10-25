@@ -52,5 +52,6 @@ func InitialMigration() {
 	DB.AutoMigrate(&model.Cinema{})
 	DB.AutoMigrate(&model.Movie{})
 	DB.AutoMigrate(&model.User{})
+	DB.AutoMigrate(&model.Account{})
 }
 

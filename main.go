@@ -15,6 +15,7 @@ func main() {
 	route.CinemaRoute(e, db)
 	route.MovieRoute(e, db)
 	route.UserRoute(e, db)
+	route.AccountRoute(e, db)
 	
 	e.Logger.Fatal(e.Start(":8000"))
 }

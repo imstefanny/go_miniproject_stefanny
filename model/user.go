@@ -12,6 +12,7 @@ type User struct {
 	Gender			string		`json:"gender"`
 	DateOfBirth	time.Time	`json:"date_of_birth"`
 	Pin					string		`json:"pin"`
+	AccountID		uint			`json:"account_id"`
 	CreatedAt		time.Time `json:"created_at"`
 	UpdatedAt		time.Time `json:"updated_at"`
 }
