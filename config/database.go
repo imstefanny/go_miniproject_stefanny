@@ -56,5 +56,6 @@ func InitialMigration() {
 	DB.AutoMigrate(&model.Studio{})
 	DB.AutoMigrate(&model.Show{})
 	DB.AutoMigrate(&model.Seat{})
+	DB.AutoMigrate(&model.Ticket{})
 }
 

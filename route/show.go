@@ -13,8 +13,12 @@ import (
 
 func ShowRoute(e *echo.Echo, db *gorm.DB) {
 	showRepository := repository.NewShowRepository(db)
+	seatRepository := repository.NewSeatRepository(db)
+	ticketRepository := repository.NewTicketRepository(db)
 
-	showService := usecase.NewShowUsecase(showRepository)
+	ticketUsecase := usecase.NewTicketUsecase(ticketRepository)
+
+	showService := usecase.NewShowUsecase(showRepository, seatRepository, ticketUsecase)
 
 	showController := controller.NewShowController(showService)
 

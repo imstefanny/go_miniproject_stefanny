@@ -19,6 +19,7 @@ func main() {
 	route.ShowRoute(e, db)
 	route.StudioRoute(e, db)
 	route.SeatRoute(e, db)
+	route.TicketRoute(e, db)
 	
 	e.Logger.Fatal(e.Start(":8000"))
 }

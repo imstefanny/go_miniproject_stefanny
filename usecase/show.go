@@ -20,10 +20,16 @@ type ShowUsecase interface {
 
 type showUsecase struct {
 	showRepository		repository.ShowRepository
+	seatRepository		repository.SeatRepository
+	ticketUsecase			TicketUsecase
 }
 
-func NewShowUsecase(showRepo repository.ShowRepository) *showUsecase {
-	return &showUsecase{showRepository: showRepo}
+func NewShowUsecase(showRepo repository.ShowRepository, seatRepository repository.SeatRepository, ticketUsecase TicketUsecase) *showUsecase {
+	return &showUsecase{
+		showRepository: showRepo,
+		seatRepository: seatRepository,
+		ticketUsecase: ticketUsecase,
+	}
 }
 
 func validateCreateShowRequest(req dto.CreateShowRequest) error {
@@ -51,10 +57,28 @@ func (s *showUsecase) Create(show dto.CreateShowRequest) error {
 		ShowEnd: show.ShowEnd,
 		Price: show.Price,
 	}
-	err := s.showRepository.Create(showData)
+	showID, err := s.showRepository.Create(showData)
 
 	if err != nil {
 		return err
+	}
+
+	// this is to retrieve seats associated with the specified studioID
+	seats, err := s.seatRepository.Find(int(show.StudioID))
+	if err != nil {
+		return err
+	}
+
+	// this is for trigger the auto creation of ticket based on the show created
+	for _, seat := range seats {
+		ticket := dto.CreateTicketRequest{
+			SeatID: seat.ID,
+			ShowID: showID,
+		}
+
+		if err := s.ticketUsecase.Create(ticket); err != nil {
+			return err
+		}
 	}
 
 	return nil

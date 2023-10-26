@@ -42,8 +42,8 @@ func (r *studioRepository) Create(data model.Studio) (uint, error) {
 	err := r.db.Create(&data)
 	if err.Error != nil {
 		return 0, err.Error
-}
-return data.ID, nil
+	}
+	return data.ID, nil
 }
 
 func (r *studioRepository) Delete(id int) error {

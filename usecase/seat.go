@@ -11,6 +11,7 @@ import (
 type SeatUsecase interface {
 	Create(seat dto.CreateSeatRequest) error
 	GetAll() (interface{}, error)
+	Find(id int) (interface{}, error)
 }
 
 type seatUsecase struct {
@@ -45,3 +46,12 @@ func (s *seatUsecase) GetAll() (interface{}, error) {
 	return seats, nil
 }
 
+func (s *seatUsecase) Find(id int) (interface{}, error) {
+	seat, err := s.seatRepository.Find(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return seat, nil
+}
