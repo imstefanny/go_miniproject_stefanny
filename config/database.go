@@ -54,5 +54,6 @@ func InitialMigration() {
 	DB.AutoMigrate(&model.User{})
 	DB.AutoMigrate(&model.Account{})
 	DB.AutoMigrate(&model.Studio{})
+	DB.AutoMigrate(&model.Show{})
 }
 
