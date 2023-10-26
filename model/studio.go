@@ -3,6 +3,7 @@ package model
 import "time"
 
 type Studio struct {
+	ID					uint			`json:"id"`
 	Name				string		`json:"name"`
 	Capacity		int				`json:"capacity"`
 	CinemaID		uint			`json:"cinema_id"`
