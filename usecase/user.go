@@ -52,6 +52,7 @@ func (s *userUsecase) Create(user dto.CreateUserRequest) error {
 		Gender: user.Gender,
 		DateOfBirth: user.DateOfBirth,
 		Pin: user.Pin,
+		AccountID: user.AccountID,
 	}
 	err := s.userRepository.Create(userData)
 
@@ -107,6 +108,7 @@ func (s *userUsecase) Update(id int, user dto.CreateUserRequest) (model.User, er
 	userData.Gender = user.Gender
 	userData.DateOfBirth = user.DateOfBirth
 	userData.Pin = user.Pin
+	userData.AccountID = user.AccountID
 	
 	e := s.userRepository.Update(id, userData)
 

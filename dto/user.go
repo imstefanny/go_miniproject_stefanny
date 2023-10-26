@@ -11,4 +11,5 @@ type CreateUserRequest struct {
 	Gender			string		`json:"gender"`
 	DateOfBirth	time.Time	`json:"date_of_birth"`
 	Pin					string		`json:"pin"`
+	AccountID		uint			`json:"account_id"`
 }
