@@ -5,6 +5,7 @@ import (
 	"miniproject/model"
 	"miniproject/repository"
 	"reflect"
+	"strconv"
 
 	// "miniproject/middlewares"
 	"errors"
@@ -20,10 +21,14 @@ type StudioUsecase interface {
 
 type studioUsecase struct {
 	studioRepository		repository.StudioRepository
+	seatUsecase					SeatUsecase
 }
 
-func NewStudioUsecase(studioRepo repository.StudioRepository) *studioUsecase {
-	return &studioUsecase{studioRepository: studioRepo}
+func NewStudioUsecase(studioRepo repository.StudioRepository, seatUsecase SeatUsecase) *studioUsecase {
+	return &studioUsecase{
+		studioRepository: studioRepo,
+		seatUsecase: seatUsecase,
+	}
 }
 
 func validateCreateStudioRequest(req dto.CreateStudioRequest) error {
@@ -48,10 +53,22 @@ func (s *studioUsecase) Create(studio dto.CreateStudioRequest) error {
 		Capacity: studio.Capacity,
 		CinemaID: studio.CinemaID,
 	}
-	err := s.studioRepository.Create(studioData)
+	id, err := s.studioRepository.Create(studioData)
 
 	if err != nil {
 		return err
+	}
+
+	// this is for trigger the auto creation of seat based on the studio capacity
+	for seatNumber := 1; seatNumber <= studio.Capacity; seatNumber++ {
+		seatRequest := dto.CreateSeatRequest{
+			StudioID: id,
+			SeatNo: strconv.Itoa(seatNumber),
+		}
+
+		if err := s.seatUsecase.Create(seatRequest); err != nil {
+			return err
+		}
 	}
 
 	return nil
