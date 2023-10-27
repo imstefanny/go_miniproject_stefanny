@@ -9,6 +9,7 @@ import (
 type SeatRepository interface {
 	GetAll() ([]model.Seat, error)
 	Create(data model.Seat) error
+	Find(studio_id int) ([]model.Seat, error)
 }
 
 type seatRepository struct {
@@ -29,4 +30,12 @@ func (r *seatRepository) GetAll() ([]model.Seat, error) {
 
 func (r *seatRepository) Create(data model.Seat) error {
 	return r.db.Create(&data).Error
+}
+
+func (r *seatRepository) Find(studio_id int) ([]model.Seat, error) {
+	seats := []model.Seat{}
+	if err := r.db.Where("studio_id = ?", studio_id).Find(&seats).Error; err != nil {
+		return seats, err
+	}
+	return seats, nil
 }

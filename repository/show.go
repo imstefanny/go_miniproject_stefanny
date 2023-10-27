@@ -9,7 +9,7 @@ import (
 type ShowRepository interface {
 	GetAll() ([]model.Show, error)
 	Find(id int) (model.Show, error)
-	Create(data model.Show) error
+	Create(data model.Show) (uint, error)
 	Delete(id int) error
 	Update(id int, show model.Show) error
 }
@@ -38,8 +38,12 @@ func (r *showRepository) Find(id int) (model.Show, error) {
 	return show, nil
 }
 
-func (r *showRepository) Create(data model.Show) error {
-	return r.db.Create(&data).Error
+func (r *showRepository) Create(data model.Show) (uint, error) {
+	err := r.db.Create(&data)
+	if err.Error != nil {
+		return 0, err.Error
+	}
+	return data.ID, nil
 }
 
 func (r *showRepository) Delete(id int) error {
