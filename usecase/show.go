@@ -13,7 +13,7 @@ import (
 type ShowUsecase interface {
 	Create(show dto.CreateShowRequest) error
 	GetAll() (interface{}, error)
-	Find(id int) (interface{}, error)
+	Find(id int) (model.Show, error)
 	Delete(id int) error
 	Update(id int, show dto.CreateShowRequest) (model.Show, error)
 }
@@ -94,11 +94,11 @@ func (s *showUsecase) GetAll() (interface{}, error) {
 	return shows, nil
 }
 
-func (s *showUsecase) Find(id int) (interface{}, error) {
+func (s *showUsecase) Find(id int) (model.Show, error) {
 	show, err := s.showRepository.Find(id)
 
 	if err != nil {
-		return nil, err
+		return model.Show{}, err
 	}
 
 	return show, nil

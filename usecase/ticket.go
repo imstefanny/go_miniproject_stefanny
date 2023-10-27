@@ -11,6 +11,7 @@ import (
 type TicketUsecase interface {
 	Create(ticket dto.CreateTicketRequest) error
 	GetAll() (interface{}, error)
+	GetTicket(ticket dto.CreateTicketRequest) (model.Ticket, error)
 }
 
 type ticketUsecase struct {
@@ -45,3 +46,12 @@ func (s *ticketUsecase) GetAll() (interface{}, error) {
 	return tickets, nil
 }
 
+func (s *ticketUsecase) GetTicket(ticket dto.CreateTicketRequest) (model.Ticket, error) {
+	ticketID, err := s.ticketRepository.GetTicket(ticket.ShowID, ticket.SeatID)
+
+	if err != nil {
+		return model.Ticket{}, err
+	}
+
+	return ticketID, nil
+}

@@ -42,6 +42,7 @@ func (s *accountUsecase) Create(account dto.CreateAccountRequest) error {
 	if e!= nil {
 		return e
 	}
+	
 	accountData := model.Account{
 		Username: account.Username,
 		Email: account.Email,

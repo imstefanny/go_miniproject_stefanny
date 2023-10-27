@@ -20,6 +20,7 @@ func main() {
 	route.StudioRoute(e, db)
 	route.SeatRoute(e, db)
 	route.TicketRoute(e, db)
+	route.TransactionRoute(e, db)
 	
 	e.Logger.Fatal(e.Start(":8000"))
 }
