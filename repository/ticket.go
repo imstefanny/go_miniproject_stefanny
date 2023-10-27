@@ -9,6 +9,7 @@ import (
 type TicketRepository interface {
 	GetAll() ([]model.Ticket, error)
 	Create(data model.Ticket) error
+	GetTicket(showID, seatID uint) (model.Ticket, error)
 }
 
 type ticketRepository struct {
@@ -29,4 +30,12 @@ func (r *ticketRepository) GetAll() ([]model.Ticket, error) {
 
 func (r *ticketRepository) Create(data model.Ticket) error {
 	return r.db.Create(&data).Error
+}
+
+func (r *ticketRepository) GetTicket(showID, seatID uint) (model.Ticket, error) {
+	ticket := model.Ticket{}
+	if err := r.db.Where("show_id = ? AND seat_id = ?", showID, seatID).First(&ticket).Error; err != nil {
+		return ticket, err
+	}
+	return ticket, nil
 }

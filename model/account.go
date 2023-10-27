@@ -15,7 +15,7 @@ type Account struct {
 
 type AccountResponse struct {
 	ID			 	uint			`json:"id"`
-	Username		string		`json:"username"`
+	Username	string		`json:"username"`
 	Email    	string 		`json:"email"`
 	Token 		string 		`json:"token"`
 	CreatedAt	time.Time `json:"created_at"`
