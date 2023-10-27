@@ -12,6 +12,7 @@ type MovieRepository interface {
 	Create(data model.Movie) error
 	Delete(id int) error
 	Update(id int, movie model.Movie) error
+	GetMovieByName(title string) (model.Movie, error)
 }
 
 type movieRepository struct {
@@ -55,4 +56,12 @@ func (r *movieRepository) Update(id int, movie model.Movie) error {
 		return err
 	}
 	return nil
+}
+
+func (r *movieRepository) GetMovieByName(title string) (model.Movie, error) {
+	movie := model.Movie{}
+	if err := r.db.Where("title = ?", title).Find(&movie).Error; err != nil {
+		return movie, err
+	}
+	return movie, nil
 }

@@ -14,7 +14,7 @@ type MovieController interface{
 }
 
 type movieController struct {
-	useCase usecase.MovieUsecase
+	movieUsecase usecase.MovieUsecase
 }
 
 func NewMovieController(movieUsecase usecase.MovieUsecase) *movieController {
@@ -30,7 +30,7 @@ func (u *movieController) Create(c echo.Context) error {
 		})
 	}
 
-	err := u.useCase.Create(movie)
+	err := u.movieUsecase.Create(movie)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -44,7 +44,7 @@ func (u *movieController) Create(c echo.Context) error {
 }
 
 func (u *movieController) GetAll(c echo.Context) error {
-	movies, err := u.useCase.GetAll()
+	movies, err := u.movieUsecase.GetAll()
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -59,7 +59,7 @@ func (u *movieController) GetAll(c echo.Context) error {
 
 func (u *movieController) Find(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	movie, err := u.useCase.Find(id)
+	movie, err := u.movieUsecase.Find(id)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -74,7 +74,7 @@ func (u *movieController) Find(c echo.Context) error {
 
 func (u *movieController) Delete(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	err := u.useCase.Delete(id)
+	err := u.movieUsecase.Delete(id)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -97,7 +97,7 @@ func (u *movieController) Update(c echo.Context) error {
 		})
 	}
 
-	movieUpdated, err := u.useCase.Update(id, movie)
+	movieUpdated, err := u.movieUsecase.Update(id, movie)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -108,5 +108,19 @@ func (u *movieController) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"data": movieUpdated,
 		"message": "success update data",
+	})
+}
+
+func (u *movieController) GetMovieRecommendations(c echo.Context) error {
+	recommend, err := u.movieUsecase.GetMovieRecommendations()
+	
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error": err,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"recommended_movie": recommend,
 	})
 }

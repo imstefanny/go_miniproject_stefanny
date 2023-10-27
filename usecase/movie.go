@@ -1,13 +1,22 @@
 package usecase
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
+	"os"
 	"reflect"
+	"strings"
 
 	// "miniproject/middlewares"
 	"errors"
+
+	"github.com/joho/godotenv"
+
+	openai "github.com/sashabaranov/go-openai"
 )
 
 type MovieUsecase interface {
@@ -16,6 +25,8 @@ type MovieUsecase interface {
 	Find(id int) (interface{}, error)
 	Delete(id int) error
 	Update(id int, movie dto.CreateMovieRequest) (model.Movie, error)
+	GetMovieRecommendations() (interface{}, error)
+	GetMovieByName(title string) (model.Movie, error)
 }
 
 type movieUsecase struct {
@@ -132,4 +143,76 @@ func (s *movieUsecase) Update(id int, movie dto.CreateMovieRequest) (model.Movie
 		return model.Movie{}, err
 	}
 	return movieUpdated, nil
+}
+
+func (s *movieUsecase) GetMovieByName(title string) (model.Movie, error) {
+	movie, err := s.movieRepository.GetMovieByName(title)
+
+	if err != nil {
+		return model.Movie{}, err
+	}
+
+	return movie, nil
+}
+
+func (s *movieUsecase) GetMovieRecommendations() (interface{}, error) {
+	movies, errs := s.movieRepository.GetAll()
+	
+	if errs != nil {
+		return []model.Movie{}, errs
+	}
+
+	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", movies)
+
+	e := godotenv.Load("./.env")
+	if e != nil {
+		log.Fatalf("Cannot load env file. Err: %s", e)
+	}
+	ctx := context.Background()
+	client := openai.NewClient(os.Getenv("KEY"))
+	messages := []openai.ChatCompletionMessage{
+		{
+			Role: openai.ChatMessageRoleSystem,
+			Content: "You are a friendly chatbot that helps to recommend movies based on data given.",
+		},
+		{
+			Role: openai.ChatMessageRoleUser,
+			Content: userInput,
+		},
+	}
+	models := openai.GPT3Dot5Turbo
+	resp, err := getCompletionFromMessages(ctx, client, messages, models)
+
+	recommends := []model.Movie{}
+	res := resp.Choices[0].Message.Content
+	titles := strings.Split(res, ", ")
+	for _, title := range titles {
+		recommend, e := s.GetMovieByName(title)
+		if e != nil {
+			return recommends, err
+		}
+		recommends = append(recommends, recommend)
+	}
+
+	return recommends, err
+}
+
+func getCompletionFromMessages(
+	ctx context.Context,
+	client *openai.Client,
+	messages []openai.ChatCompletionMessage,
+	model string,
+) (openai.ChatCompletionResponse, error) {
+	if model == "" {
+		model = openai.GPT3Dot5Turbo
+	}
+
+	resp, err := client.CreateChatCompletion(
+		ctx,
+		openai.ChatCompletionRequest{
+			Model:    model,
+			Messages: messages,
+		},
+	)
+	return resp, err
 }
