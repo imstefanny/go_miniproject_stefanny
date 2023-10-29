@@ -24,14 +24,14 @@ func NewTransactionController(transactionUsecase usecase.TransactionUsecase) *tr
 func (u *transactionController) Create(c echo.Context) error {
 	transaction := dto.CreateTransactionRequest{}
 
-	if err := c.Bind(&transaction); err != nil {
+	if e := c.Bind(&transaction); e != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"error": err,
+			"error": e,
 		})
 	}
 
 	inv, err := u.useCase.Create(transaction)
-
+	
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err,
@@ -72,4 +72,3 @@ func (u *transactionController) GetByInvoice(c echo.Context) error {
 		"data": transaction,
 	})
 }
-

@@ -14,8 +14,9 @@ import (
 func StudioRoute(e *echo.Echo, db *gorm.DB) {
 	studioRepository := repository.NewStudioRepository(db)
 	seatRepository := repository.NewSeatRepository(db)
+	ticketRepository := repository.NewTicketRepository(db)
 
-	seatUsecase := usecase.NewSeatUsecase(seatRepository)
+	seatUsecase := usecase.NewSeatUsecase(seatRepository, ticketRepository)
 
 	studioService := usecase.NewStudioUsecase(studioRepository, seatUsecase)
 

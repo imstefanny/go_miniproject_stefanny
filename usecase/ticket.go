@@ -4,14 +4,13 @@ import (
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
-
-	// "miniproject/middlewares"
 )
 
 type TicketUsecase interface {
 	Create(ticket dto.CreateTicketRequest) error
 	GetAll() (interface{}, error)
 	GetTicket(ticket dto.CreateTicketRequest) (model.Ticket, error)
+	CheckSoldOut(ticketID uint) (bool, error)
 }
 
 type ticketUsecase struct {
@@ -54,4 +53,21 @@ func (s *ticketUsecase) GetTicket(ticket dto.CreateTicketRequest) (model.Ticket,
 	}
 
 	return ticketID, nil
+}
+
+func (s *ticketUsecase) CheckSoldOut(ticketID uint) (bool, error) {
+	sold, err := s.ticketRepository.Find(int(ticketID))
+
+	if err != nil {
+		return false, err
+	}
+
+	var sold_out bool
+	if sold.TransactionID != 0 {
+		sold_out = true
+	} else {
+		sold_out = false
+	}
+
+	return sold_out, err
 }
