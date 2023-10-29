@@ -10,6 +10,7 @@ type TransactionRepository interface {
 	GetAll() ([]model.Transaction, error)
 	Create(data model.Transaction) error
 	GetByInvoice(invoice string) (model.Transaction, error)
+	CheckSeatValidity(ticketID uint) (bool, error)
 }
 
 type transactionRepository struct {
@@ -38,4 +39,15 @@ func(r *transactionRepository) GetByInvoice(invoice string) (model.Transaction, 
 		return transaction, err
 	}
 	return transaction, nil
+}
+
+func (r *transactionRepository) CheckSeatValidity(ticketID uint) (bool, error) {
+	transaction := model.Transaction{}
+	if err := r.db.Preload("Tickets").Where("Tickets.ID = ?", ticketID).First(&transaction).Error; err != nil {
+		return false, err
+	}
+	if transaction.ID != 0 {
+		return false, nil
+	}
+	return true, nil
 }

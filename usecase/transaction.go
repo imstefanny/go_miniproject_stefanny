@@ -15,6 +15,7 @@ type TransactionUsecase interface {
 	Create(transaction dto.CreateTransactionRequest) (string, error)
 	GetAll() (interface{}, error)
 	GetByInvoice(invoice string) (model.Transaction, error)
+	CheckSeatValidity(ticketID uint) (bool, error)
 }
 
 type transactionUsecase struct {
@@ -55,7 +56,12 @@ func (s *transactionUsecase) Create(transaction dto.CreateTransactionRequest) (s
 			SeatID: seat,
 		}
 		ticketID, _ := s.ticketUsecase.GetTicket(ticket)
-		tickets = append(tickets, ticketID)
+		seatAvailable, _ := s.ticketUsecase.CheckSoldOut(ticketID.ID)
+		if (!seatAvailable) {
+			tickets = append(tickets, ticketID)
+		} else {
+			return "", errors.New("There's unavailable seat(s) in your transaction")
+		}
 	}
 
 	var price int
@@ -108,4 +114,14 @@ func (s *transactionUsecase) GetByInvoice(invoice string) (model.Transaction, er
 	}
 
 	return transaction, nil
+}
+
+func (s *transactionUsecase) CheckSeatValidity(ticketID uint) (bool, error) {
+	filled, err := s.transactionRepository.CheckSeatValidity(ticketID)
+
+	if err != nil {
+		return !filled, err
+	}
+
+	return !filled, nil
 }

@@ -10,6 +10,7 @@ type SeatRepository interface {
 	GetAll() ([]model.Seat, error)
 	Create(data model.Seat) error
 	Find(studio_id int) ([]model.Seat, error)
+	GetAvailableSeats(seat_id int) (model.Seat, error)
 }
 
 type seatRepository struct {
@@ -38,4 +39,12 @@ func (r *seatRepository) Find(studio_id int) ([]model.Seat, error) {
 		return seats, err
 	}
 	return seats, nil
+}
+
+func (r *seatRepository) GetAvailableSeats(seat_id int) (model.Seat, error) {
+	seat := model.Seat{}
+	if err := r.db.Find(&seat, seat_id).Error; err != nil {
+		return seat, err
+	}
+	return seat, nil
 }
