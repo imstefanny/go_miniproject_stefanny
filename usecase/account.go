@@ -15,7 +15,7 @@ type AccountUsecase interface {
 	Create(account dto.CreateAccountRequest) error
 	Delete(id int) error
 	Update(id int, user dto.CreateAccountRequest) (model.Account, error)
-	Login(data dto.CreateAccountRequest) (interface{}, error)
+	Login(data dto.LoginAccountRequest) (interface{}, error)
 }
 
 type accountUsecase struct {
@@ -27,6 +27,16 @@ func NewAccountUsecase(accountRepo repository.AccountRepository) *accountUsecase
 }
 
 func validateCreateAccountRequest(req dto.CreateAccountRequest) error {
+	val := reflect.ValueOf(req)
+	for i := 0; i < val.NumField(); i++ {
+			if isEmptyField(val.Field(i)) {
+					return errors.New("Field can't be empty")
+			}
+	}
+	return nil
+}
+
+func validateLoginAccountRequest(req dto.LoginAccountRequest) error {
 	val := reflect.ValueOf(req)
 	for i := 0; i < val.NumField(); i++ {
 			if isEmptyField(val.Field(i)) {
@@ -115,8 +125,8 @@ func (s *accountUsecase) Update(id int, account dto.CreateAccountRequest) (model
 }
 
 
-func (s *accountUsecase) Login(data dto.CreateAccountRequest) (interface{}, error) {
-	e := validateCreateAccountRequest(data)
+func (s *accountUsecase) Login(data dto.LoginAccountRequest) (interface{}, error) {
+	e := validateLoginAccountRequest(data)
 	
 	if e!= nil {
 		return nil, e
@@ -126,7 +136,6 @@ func (s *accountUsecase) Login(data dto.CreateAccountRequest) (interface{}, erro
 		Username: data.Username,
 		Email: data.Email,
 		Password: data.Password,
-		Role: data.Role,
 	}
 	account, err := s.accountRepository.Login(accountData)
 
@@ -134,7 +143,7 @@ func (s *accountUsecase) Login(data dto.CreateAccountRequest) (interface{}, erro
 		return nil, err
 	}
 
-	token, err := middlewares.CreateToken(account.Username, account.Password)
+	token, err := middlewares.CreateToken(account.Username, account.Password, account.Role)
 
 	if err != nil {
 		return nil, err

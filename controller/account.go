@@ -112,7 +112,7 @@ func (u *accountController) Update(c echo.Context) error {
 }
 
 func (u *accountController) Login(c echo.Context) error {
-	account := dto.CreateAccountRequest{}
+	account := dto.LoginAccountRequest{}
 
 	if err := c.Bind(&account); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

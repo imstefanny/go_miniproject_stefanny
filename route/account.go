@@ -4,11 +4,13 @@ import (
 	"miniproject/controller"
 	"miniproject/repository"
 	"miniproject/usecase"
-	// "miniproject/constants"
+	"miniproject/constants"
 
 	"github.com/labstack/echo/v4"
-	// "github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
+
+	m "miniproject/middlewares"
 )
 
 func AccountRoute(e *echo.Echo, db *gorm.DB) {
@@ -22,6 +24,8 @@ func AccountRoute(e *echo.Echo, db *gorm.DB) {
 	e.POST("/register", accountController.Create)
 
 	eAccount := e.Group("/accounts")
+	eAccount.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eAccount.Use(m.IsAdmin)
 	eAccount.GET("", accountController.GetAll)
 	eAccount.GET("/:id", accountController.Find)
 	eAccount.POST("", accountController.Create)
