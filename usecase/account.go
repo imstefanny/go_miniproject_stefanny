@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"miniproject/dto"
 	"miniproject/middlewares"
 	"miniproject/model"
@@ -14,7 +15,7 @@ type AccountUsecase interface {
 	Find(id int) (interface{}, error)
 	Create(account dto.CreateAccountRequest) error
 	Delete(id int) error
-	Update(id int, user dto.CreateAccountRequest) (model.Account, error)
+	Update(id int, account dto.CreateAccountRequest) (model.Account, error)
 	Login(data dto.LoginAccountRequest) (interface{}, error)
 }
 
@@ -117,6 +118,7 @@ func (s *accountUsecase) Update(id int, account dto.CreateAccountRequest) (model
 	}
 
 	accountUpdated, err := s.accountRepository.Find(id)
+	fmt.Println(accountUpdated, "asdasdasdasd")
 
 	if err != nil {
 		return model.Account{}, err

@@ -154,13 +154,14 @@ func (s *movieUsecase) GetMovieByName(title string) (model.Movie, error) {
 }
 
 func (s *movieUsecase) GetMovieRecommendations() (interface{}, error) {
-	movies, errs := s.movieRepository.GetAll()
+	// movies, errs := s.movieRepository.GetAll()
 	
-	if errs != nil {
-		return []model.Movie{}, errs
-	}
+	// if errs != nil {
+	// 	return []model.Movie{}, errs
+	// }
 
-	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", movies)
+	// userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", movies)
+	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", "movies")
 
 	e := godotenv.Load("./.env")
 	if e != nil {
