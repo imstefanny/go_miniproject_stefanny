@@ -10,6 +10,6 @@ COPY . .
 
 RUN go build -o /go_miniproject_stefanny
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD [ "/go_miniproject_stefanny" ]
