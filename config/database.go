@@ -26,9 +26,9 @@ type Config struct {
 func InitDB() *gorm.DB{
 	config := Config{
 		DB_Username: "root",
-		DB_Password: "Sw221103",
+		DB_Password: "root",
 		DB_Port:     "3306",
-		DB_Host:     "localhost",
+		DB_Host:     "34.136.130.233",
 		DB_Name:     "miniproject",
 	}
 
