@@ -50,10 +50,12 @@ func Route(e *echo.Echo, db *gorm.DB) {
 	transactionService := usecase.NewTransactionUsecase(transactionRepository, ticketService, showService)
 	transactionController := controller.NewTransactionController(transactionService)
 
-	eAdmin := e.Group("/admin")
+	e.Pre(middleware.RemoveTrailingSlash())
+	
+	eAdmin := e.Group("")
 	eAdmin.Use(m.IsAdmin)
 
-	eUser := e.Group("/users")
+	eUser := e.Group("")
 	eUser.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
 
 	// basic authentication route
