@@ -56,8 +56,8 @@ func TestGetTicket(t *testing.T) {
 
 	mockTicket := model.Ticket{
 		ID:	1,
-			ShowID: 1,
-			SeatID: 1,
+		ShowID: 1,
+		SeatID: 1,
 	}
 
 	mockTicketRepository := repository.NewMockTicketRepository()
