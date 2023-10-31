@@ -49,3 +49,4 @@ jobs:
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
             docker run -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest
+          
