@@ -41,7 +41,7 @@ jobs:
         env:
           KEY: ${{ secrets.API_KEY }}
       - name: Check the .env file
-        run: 
+        run: |
           ls -la 
           cat .env
       - name: Connect to server using SSH
