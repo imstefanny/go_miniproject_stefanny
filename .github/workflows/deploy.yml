@@ -40,6 +40,10 @@ jobs:
         run: echo "KEY=$KEY" >> .env
         env:
           KEY: ${{ secrets.API_KEY }}
+      - name: Check the .env file
+        run: 
+          ls -la 
+          cat .env
       - name: Connect to server using SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
