@@ -36,14 +36,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker
     steps:
-      - name: Set up API Keys
-        run: echo "KEY=$KEY" >> .env
-        env:
-          KEY: ${{ secrets.API_KEY }}
-      - name: Check the .env file
-        run: |
-          ls -la 
-          cat .env
       - name: Connect to server using SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -56,5 +48,5 @@ jobs:
             docker rm miniproject_server
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
-            docker run -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest
+            docker run -d -p 8080:8080 -e KEY=${{ secrets.API_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest
           
