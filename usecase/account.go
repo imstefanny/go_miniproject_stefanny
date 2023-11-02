@@ -14,7 +14,7 @@ type AccountUsecase interface {
 	Find(id int) (interface{}, error)
 	Create(account dto.CreateAccountRequest) error
 	Delete(id int) error
-	Update(id int, user dto.CreateAccountRequest) (model.Account, error)
+	Update(id int, account dto.CreateAccountRequest) (model.Account, error)
 	Login(data dto.LoginAccountRequest) (interface{}, error)
 }
 
