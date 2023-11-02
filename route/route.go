@@ -50,67 +50,82 @@ func Route(e *echo.Echo, db *gorm.DB) {
 	transactionService := usecase.NewTransactionUsecase(transactionRepository, ticketService, showService)
 	transactionController := controller.NewTransactionController(transactionService)
 
-	eAdmin := e.Group("/admin")
-	eAdmin.Use(m.IsAdmin)
-
-	eUser := e.Group("/users")
-	eUser.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
-
+	e.Pre(middleware.RemoveTrailingSlash())
+	
 	// basic authentication route
 	e.POST("/register", accountController.Create)
 	e.POST("/login", accountController.Login)
 
 	// account route
-	eAdmin.GET("/accounts", accountController.GetAll)
-	eAdmin.GET("/accounts/:id", accountController.Find)
-	eAdmin.PUT("/accounts/:id", accountController.Update)
-	eAdmin.DELETE("/accounts/:id", accountController.Delete)
+	eAccount := e.Group("/accounts")
+	eAccount.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eAccount.Use(m.IsAdmin)
+	eAccount.GET("", accountController.GetAll)
+	eAccount.GET("/:id", accountController.Find)
+	eAccount.PUT("/:id", accountController.Update)
+	eAccount.DELETE("/:id", accountController.Delete)
 
 	// user route
-	eUser.GET("/users", userController.GetAll)
-	eUser.GET("/users/:id", userController.Find)
-	eUser.POST("/users", userController.Create)
-	eUser.PUT("/users/:id", userController.Update)
-	eAdmin.DELETE("/users/:id", userController.Delete)
+	eUser := e.Group("/users")
+	eUser.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eUser.GET("", userController.GetAll)
+	eUser.GET("/:id", userController.Find)
+	eUser.POST("", userController.Create)
+	eUser.PUT("/:id", userController.Update)
+	eUser.DELETE("/:id", userController.Delete, m.IsAdmin)
 
 	// cinema route
-	eUser.GET("/cinemas", cinemaController.GetAll)
-	eUser.GET("/cinemas/:id", cinemaController.Find)
-	eAdmin.POST("/cinemas", cinemaController.Create)
-	eAdmin.PUT("/cinemas/:id", cinemaController.Update)
-	eAdmin.DELETE("/cinemas/:id", cinemaController.Delete)
+	eCinema := e.Group("/cinemas")
+	eCinema.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eCinema.GET("", cinemaController.GetAll)
+	eCinema.GET("/:id", cinemaController.Find)
+	eCinema.POST("", cinemaController.Create, m.IsAdmin)
+	eCinema.PUT("/:id", cinemaController.Update, m.IsAdmin)
+	eCinema.DELETE("/:id", cinemaController.Delete, m.IsAdmin)
 
 	// movie route
-	eUser.GET("/movies", movieController.GetAll)
-	eUser.GET("/movies/recommend", movieController.GetMovieRecommendations)
-	eUser.GET("/movies/:id", movieController.Find)
-	eAdmin.POST("/movies", movieController.Create)
-	eAdmin.PUT("/movies/:id", movieController.Update)
-	eAdmin.DELETE("/movies/:id", movieController.Delete)
+	eMovie := e.Group("/movies")
+	eMovie.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eMovie.GET("", movieController.GetAll)
+	eMovie.GET("/recommend", movieController.GetMovieRecommendations)
+	eMovie.GET("/:id", movieController.Find)
+	eMovie.POST("", movieController.Create, m.IsAdmin)
+	eMovie.PUT("/:id", movieController.Update, m.IsAdmin)
+	eMovie.DELETE("/:id", movieController.Delete, m.IsAdmin)
 
 	// ticket route
-	eUser.GET("/tickets", ticketController.GetAll)
+	eTicket := e.Group("/tickets")
+	eTicket.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eTicket.GET("", ticketController.GetAll)
 
 	// seat route
-	eUser.GET("/seats", seatController.GetAll)
-	eUser.GET("/seats/:show_id", seatController.GetAvailableSeats)
+	eSeat := e.Group("/seats")
+	eSeat.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eSeat.GET("", seatController.GetAll)
+	eSeat.GET("/:show_id", seatController.GetAvailableSeats)
 
 	// show route
-	eUser.GET("/shows", showController.GetAll)
-	eUser.GET("/shows/:id", showController.Find)
-	eAdmin.POST("/shows", showController.Create)
-	eAdmin.PUT("/shows/:id", showController.Update)
-	eAdmin.DELETE("/shows/:id", showController.Delete)
+	eShow := e.Group("/shows")
+	eShow.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eShow.GET("", showController.GetAll)
+	eShow.GET("/:id", showController.Find)
+	eShow.POST("", showController.Create, m.IsAdmin)
+	eShow.PUT("/:id", showController.Update, m.IsAdmin)
+	eShow.DELETE("/:id", showController.Delete, m.IsAdmin)
 
 	// studio route
-	eUser.GET("/studios", studioController.GetAll)
-	eUser.GET("/studios/:id", studioController.Find)
-	eAdmin.POST("/studios", studioController.Create)
-	eAdmin.PUT("/studios/:id", studioController.Update)
-	eAdmin.DELETE("/studios/:id", studioController.Delete)
+	eStudio := e.Group("/studios")
+	eStudio.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eStudio.GET("", studioController.GetAll)
+	eStudio.GET("/:id", studioController.Find)
+	eStudio.POST("", studioController.Create, m.IsAdmin)
+	eStudio.PUT("/:id", studioController.Update, m.IsAdmin)
+	eStudio.DELETE("/:id", studioController.Delete, m.IsAdmin)
 
 	// transaction route
-	eAdmin.GET("/transactions", transactionController.GetAll)
-	eUser.GET("/transactions/:invoice", transactionController.GetByInvoice)
-	eUser.POST("/transactions", transactionController.Create)
+	eTrans := e.Group("/transactions")
+	eTrans.Use(middleware.JWT([]byte(constants.SECRET_KEY)))
+	eTrans.GET("", transactionController.GetAll, m.IsAdmin)
+	eTrans.GET("/:invoice", transactionController.GetByInvoice)
+	eTrans.POST("", transactionController.Create)
 }

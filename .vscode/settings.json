@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+      "https://json.schemastore.org/github-workflow.json": "D:///Kampus Merdeka/miniproject/go_miniproject_stefanny/.github/workflows/deploy.yml"
+  }
+}
