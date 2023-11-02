@@ -162,10 +162,7 @@ func (s *movieUsecase) GetMovieRecommendations() (interface{}, error) {
 
 	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", movies)
 
-	e := godotenv.Load(".env")
-	if e != nil {
-		log.Fatalf("Cannot load env file. Err: %s", e)
-	}
+	godotenv.Load(".env")
 	ctx := context.Background()
 	client := openai.NewClient(os.Getenv("KEY"))
 	messages := []openai.ChatCompletionMessage{
