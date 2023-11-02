@@ -74,6 +74,27 @@ func TestGetSeat(t *testing.T) {
 	}
 }
 
-// func TestGetAvailableSeats(t *testing.T) {
+func TestGetAvailableSeats(t *testing.T) {
+	mockSeat := []model.Seat{
+		{
+			ID:	1,
+			SeatNo: "1",
+			StudioID: 1,
+		},
+	}
 
-// }
+	mockTicket := []model.Ticket{}
+
+	mockTicketRepository := repository.NewMockTicketRepository()
+	mockTicketRepository.On("GetAvailableTickets").Return(mockTicket, nil)
+
+	mockSeatRepository := repository.NewMockSeatRepository()
+	mockSeatRepository.On("GetAvailableSeats", 1).Return(mockSeat, nil)
+
+	service := NewSeatUsecase(mockSeatRepository, mockTicketRepository)
+
+	_, err := service.GetAvailableSeats(1)
+	if err != nil {
+		t.Errorf("Got Error %v", err)
+	}
+}

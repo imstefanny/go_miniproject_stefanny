@@ -2,15 +2,15 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
-	"os"
+	// "os"
 	"reflect"
 	"strings"
-	"errors"
 
 	"github.com/joho/godotenv"
 
@@ -23,7 +23,7 @@ type MovieUsecase interface {
 	Find(id int) (interface{}, error)
 	Delete(id int) error
 	Update(id int, movie dto.CreateMovieRequest) (model.Movie, error)
-	GetMovieRecommendations() (interface{}, error)
+	GetMovieRecommendations() ([]model.Movie, error)
 	GetMovieByName(title string) (model.Movie, error)
 }
 
@@ -153,22 +153,25 @@ func (s *movieUsecase) GetMovieByName(title string) (model.Movie, error) {
 	return movie, nil
 }
 
-func (s *movieUsecase) GetMovieRecommendations() (interface{}, error) {
-	// movies, errs := s.movieRepository.GetAll()
+func (s *movieUsecase) GetMovieRecommendations() ([]model.Movie, error) {
+	movies, errs := s.movieRepository.GetAll()
 	
-	// if errs != nil {
-	// 	return []model.Movie{}, errs
-	// }
-
-	// userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", movies)
-	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", "movies")
-
-	e := godotenv.Load("./.env")
-	if e != nil {
-		log.Fatalf("Cannot load env file. Err: %s", e)
+	if errs != nil {
+		return []model.Movie{}, errs
 	}
+
+	if len(movies) == 0 {
+		return []model.Movie{}, errors.New("Currently there's no movie data")
+	}
+
+	moviesJSON, err := json.Marshal(movies)
+
+	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", string(moviesJSON))
+
+	godotenv.Load(".env")
 	ctx := context.Background()
-	client := openai.NewClient(os.Getenv("KEY"))
+	// client := openai.NewClient(os.Getenv("KEY"))
+	client := openai.NewClient("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")
 	messages := []openai.ChatCompletionMessage{
 		{
 			Role: openai.ChatMessageRoleSystem,
