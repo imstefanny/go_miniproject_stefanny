@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"log"
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
