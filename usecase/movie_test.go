@@ -213,3 +213,27 @@ func TestGetMovieByName(t *testing.T) {
 		t.Errorf("Got Error %v", err)
 	}
 }
+
+func TestGetMovieRecommendations(t *testing.T) {
+	mockMovies := []model.Movie{
+		{},
+		{},
+		{},
+	}
+	mockMovie := model.Movie{}
+
+	mockMovieRepository := repository.NewMockMovieRepository()
+	mockMovieRepository.On("GetMovieRecommendations").Return(mockMovies, nil)
+	mockMovieRepository.On("GetAll").Return(mockMovies, nil)
+	mockMovieRepository.On("GetMovieByName").Return(mockMovie, nil)
+
+	service := NewMovieUsecase(mockMovieRepository)
+
+	recommended, err := service.GetMovieRecommendations()
+	if err != nil {
+		t.Errorf("Got Error %v", err)
+	}
+	if len(recommended) != len(mockMovies) {
+		t.Errorf("Movie recommended by OpenAI doesn't suit the amount needed.")
+	}
+}

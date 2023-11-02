@@ -8,7 +8,7 @@ import (
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
-	// "os"
+	"os"
 	"reflect"
 	"strings"
 
@@ -168,10 +168,9 @@ func (s *movieUsecase) GetMovieRecommendations() ([]model.Movie, error) {
 
 	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", string(moviesJSON))
 
-	godotenv.Load(".env")
+	godotenv.Load("../.env")
 	ctx := context.Background()
-	// client := openai.NewClient(os.Getenv("KEY"))
-	client := openai.NewClient("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")
+	client := openai.NewClient(os.Getenv("KEY"))
 	messages := []openai.ChatCompletionMessage{
 		{
 			Role: openai.ChatMessageRoleSystem,
