@@ -170,13 +170,7 @@ func (s *movieUsecase) GetMovieRecommendations() ([]model.Movie, error) {
 
 	godotenv.Load(".env")
 	ctx := context.Background()
-	
-	var client *openai.Client
-	if val, found := os.LookupEnv("KEY"); found {
-		client = openai.NewClient(val)	
-	} else {
-		client = openai.NewClient(os.Getenv("KEY"))
-	}
+	client := openai.NewClient(os.Getenv("KEY"))
 	
 	messages := []openai.ChatCompletionMessage{
 		{
