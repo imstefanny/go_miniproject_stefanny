@@ -53,9 +53,6 @@ func TestCreateTransaction(t *testing.T) {
 		ShowEnd: showEnd,
 		Price: 65000,
 	}
-	
-	mockTransactionRepository := repository.NewMockTransactionRepository()
-	mockTransactionRepository.On("Create", mockTransaction).Return(nil)
 
 	mockTicketRepository := repository.NewMockTicketRepository()
 	mockTicketRepository.On("GetTicket").Return(mockTicket, nil)
@@ -64,6 +61,9 @@ func TestCreateTransaction(t *testing.T) {
 
 	mockShowRepository := repository.NewMockShowRepository()
 	mockShowRepository.On("Find").Return(mockShow, nil)
+	
+	mockTransactionRepository := repository.NewMockTransactionRepository()
+	mockTransactionRepository.On("Create", mockTransaction).Return(nil)
 
 	mockSeatRepository := repository.NewMockSeatRepository()
 

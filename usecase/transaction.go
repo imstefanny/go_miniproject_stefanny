@@ -3,7 +3,7 @@ package usecase
 import (
 	"errors"
 	"fmt"
-	// "math/rand"
+	"math/rand"
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
@@ -101,9 +101,9 @@ func (s *transactionUsecase) GetAll() (interface{}, error) {
 
 func generateInvoiceNumber() string {
 	timestamp := time.Now().Unix()
-	// random_num := rand.Intn(5000)
+	random_num := rand.Intn(5000)
 	// this is for unit testing (because if random, the invoice generated when creating real and testing has differenct random num)
-	random_num := 1
+	// random_num := 1
 	invoiceNumber := fmt.Sprintf("%d-%d", timestamp, random_num)
 	return invoiceNumber
 }
