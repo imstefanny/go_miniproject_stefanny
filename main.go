@@ -1,14 +1,14 @@
 package main
 
 import (
-	"miniproject/config"
+	"miniproject/database"
 	"miniproject/route"
 
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	db := config.InitDB()
+	db := database.InitDB()
 
 	e := echo.New()
 

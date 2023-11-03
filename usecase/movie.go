@@ -5,14 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"miniproject/config"
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
-	"os"
 	"reflect"
 	"strings"
-
-	"github.com/joho/godotenv"
 
 	openai "github.com/sashabaranov/go-openai"
 )
@@ -168,9 +166,9 @@ func (s *movieUsecase) GetMovieRecommendations() ([]model.Movie, error) {
 
 	userInput := fmt.Sprintf("Here I get you JSON form of an array of movies data. %s Learn it and recommend me randomly choose three titles of them. Give me in the form ..., ..., ... WITHOUT other explanations.", string(moviesJSON))
 
-	godotenv.Load(".env")
+	config := config.ReadEnv()
 	ctx := context.Background()
-	client := openai.NewClient(os.Getenv("KEY"))
+	client := openai.NewClient(config.API_KEY)
 	
 	messages := []openai.ChatCompletionMessage{
 		{
