@@ -171,6 +171,7 @@ func (s *movieUsecase) GetMovieRecommendations() ([]model.Movie, error) {
 	godotenv.Load(".env")
 	ctx := context.Background()
 	client := openai.NewClient(os.Getenv("KEY"))
+	
 	messages := []openai.ChatCompletionMessage{
 		{
 			Role: openai.ChatMessageRoleSystem,
