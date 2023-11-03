@@ -1,7 +1,8 @@
-package config
+package database
 
 import (
 	"fmt"
+	"miniproject/config"
 	"miniproject/model"
 
 	"gorm.io/driver/mysql"
@@ -15,29 +16,14 @@ func init() {
 	InitialMigration()
 }
 
-type Config struct {
-	DB_Username string
-	DB_Password string
-	DB_Port     string
-	DB_Host     string
-	DB_Name     string
-}
-
 func InitDB() *gorm.DB{
-	config := Config{
-		DB_Username: "root",
-		DB_Password: "root",
-		DB_Port:     "3306",
-		DB_Host:     "34.136.130.233",
-		DB_Name:     "miniproject",
-	}
-
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		config.DB_Username,
-		config.DB_Password,
-		config.DB_Host,
-		config.DB_Port,
-		config.DB_Name,
+	dbconfig := config.ReadEnv()
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		dbconfig.DB_USERNAME,
+		dbconfig.DB_PASSWORD,
+		dbconfig.DB_HOSTNAME,
+		dbconfig.DB_PORT,
+		dbconfig.DB_NAME,
 	)
 
 	var err error
@@ -59,4 +45,3 @@ func InitialMigration() {
 	DB.AutoMigrate(&model.Ticket{})
 	DB.AutoMigrate(&model.Transaction{})
 }
-

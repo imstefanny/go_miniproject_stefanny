@@ -2,11 +2,10 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
-	"math/rand"
 	"miniproject/dto"
 	"miniproject/model"
 	"miniproject/repository"
+	"miniproject/helpers"
 	"reflect"
 	"time"
 )
@@ -69,7 +68,7 @@ func (s *transactionUsecase) Create(transaction dto.CreateTransactionRequest) (s
 	price = show.Price * len(tickets)
 
 	var ticket_code string
-	ticket_code = generateInvoiceNumber()
+	ticket_code = helpers.GenerateInvoiceNumber()
 
 	transactionData := model.Transaction{
 		AccountID: transaction.AccountID,
@@ -97,15 +96,6 @@ func (s *transactionUsecase) GetAll() (interface{}, error) {
 	}
 
 	return transactions, nil
-}
-
-func generateInvoiceNumber() string {
-	timestamp := time.Now().Unix()
-	random_num := rand.Intn(5000)
-	// this is for unit testing (because if random, the invoice generated when creating real and testing has differenct random num)
-	// random_num := 1
-	invoiceNumber := fmt.Sprintf("%d-%d", timestamp, random_num)
-	return invoiceNumber
 }
 
 func (s *transactionUsecase) GetByInvoice(invoice string) (model.Transaction, error) {
