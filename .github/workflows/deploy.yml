@@ -48,5 +48,4 @@ jobs:
             docker rm miniproject_server
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
-            docker run -d -p 8080:8080 -e KEY=${{ secrets. API_KEY }} ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest
-  
+            docker run -d -p 8080:8080 -e KEY=${{ secrets. API_KEY }} -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} --name miniproject_server ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest

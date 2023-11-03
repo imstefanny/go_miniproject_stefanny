@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"miniproject/dto"
+	"miniproject/helpers"
 	"miniproject/model"
 	"miniproject/repository"
 	"testing"
@@ -27,7 +28,7 @@ func TestCreateTransaction(t *testing.T) {
 		Date: time.Now(),
 		TotalPrice: 65000,
 		Status: "paid",
-		TicketCode: generateInvoiceNumber(),
+		TicketCode: helpers.GenerateInvoiceNumber(),
 	}
 
 	mockTicket := model.Ticket{
@@ -128,7 +129,7 @@ func TestGetAllTransaction(t *testing.T) {
 			Date: time.Now(),
 			TotalPrice: 65000,
 			Status: "paid",
-			TicketCode: generateInvoiceNumber(),
+			TicketCode: helpers.GenerateInvoiceNumber(),
 		},
 	}
 
