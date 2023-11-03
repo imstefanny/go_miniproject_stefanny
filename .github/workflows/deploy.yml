@@ -48,4 +48,4 @@ jobs:
             docker rm miniproject_server
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/miniproject
-            docker run -d -p 8080:8080 --env-file .env ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest
+            docker run -d -p 8080:8080 -e KEY=${{ secrets. API_KEY}} .env ${{ secrets.DOCKERHUB_USERNAME }}/miniproject:latest
